@@ -32,6 +32,15 @@ fun main() {
         }
     }
 
+    fun Char.getStrategyHandGesture(enemy: HandGesture): HandGesture {
+        return when (this) {
+            'X' -> enemy.defeats
+            'Y' -> enemy
+            'Z' -> enemy.losesTo
+            else -> throw IllegalArgumentException("Input can't be $this")
+        }
+    }
+
     fun HandGesture.calculateRound(enemy: HandGesture): Int {
         val combatScore =  if (this.defeats == enemy) {
             6
@@ -54,11 +63,18 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var sum = 0
+        input.forEach { line ->
+            val them = line[0].getHandGesture()
+            val us = line[2].getStrategyHandGesture(them)
+            sum += us.calculateRound(them)
+        }
+        return sum
     }
 
     val testInput = readInput("Day02_test")
     check(part1(testInput) == 15)
+    check(part2(testInput) == 12)
 
     val input = readInput("Day02")
     println(part1(input))
