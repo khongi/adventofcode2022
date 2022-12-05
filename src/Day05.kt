@@ -36,6 +36,17 @@ fun main() {
         repeat(moveCount) { stacks[to - 1].add(stacks[from - 1].pop()) }
     }
 
+    fun moveMultipleCrates(
+        moveCount: Int,
+        stacks: List<Stack<Char>>,
+        to: Int,
+        from: Int
+    ) {
+        val tempStack: Stack<Char> = Stack()
+        repeat(moveCount) { tempStack.add(stacks[from - 1].pop()) }
+        repeat(moveCount) { stacks[to - 1].add(tempStack.pop()) }
+    }
+
     fun getNumberedLineIndex(input: List<String>) = input.indexOfFirst { it.contains('1') }
 
     fun operateCrateMover(
@@ -62,16 +73,16 @@ fun main() {
         return operateCrateMover(input, ::moveSingleCrates)
     }
 
-//    fun part2(input: List<String>): Int {
-//        return input.size
-//    }
+    fun part2(input: List<String>): String {
+        return operateCrateMover(input, ::moveMultipleCrates)
+    }
 
     val testInput = readInput("Day05_test")
     check(part1(testInput) == "CMZ")
-//    check(part2(testInput) == 1)
+    check(part2(testInput) == "MCD")
 
     val input = readInput("Day05")
     println(part1(input))
-//    println(part2(input))
+    println(part2(input))
 }
 
