@@ -1,10 +1,8 @@
 fun main() {
     fun detectMarker(stream: String, uniqueChars: Int): Int {
-        val readChars = mutableListOf<Char>()
-        stream.forEachIndexed { index, c ->
-            readChars.add(c)
-            if (readChars.takeLast(uniqueChars).toSet().count() == uniqueChars) {
-                return index + 1
+        stream.windowed(uniqueChars).forEachIndexed { index, window ->
+            if (window.toSet().count() == uniqueChars) {
+                return index + uniqueChars
             }
         }
         return -1
