@@ -83,9 +83,9 @@ fun main() {
         return root
     }
 
-    fun Dir.findDirectories(maxSize: Int): List<Dir> {
-        val children = nodes.filterIsInstance<Dir>().flatMap { it.findDirectories(maxSize) }
-        return if (calculateSize() <= maxSize) {
+    fun Dir.findDirectories(compare: (Int) -> Boolean): List<Dir> {
+        val children = nodes.filterIsInstance<Dir>().flatMap { it.findDirectories(compare) }
+        return if (compare(calculateSize())) {
             children + this
         } else {
             children
@@ -94,12 +94,26 @@ fun main() {
 
     fun part1(input: List<String>): Int {
         val root = buildTree(input)
-        return root.findDirectories(100_000).sumOf { it.calculateSize() }
+        return root.findDirectories { it <= 100_000 }.sumOf { it.calculateSize() }
+    }
+
+
+    fun part2(input: List<String>): Int {
+        val total = 70_000_000
+        val unusedNeeded = 30_000_000
+
+        val root = buildTree(input)
+        val unusedSpace = total - root.calculateSize()
+        val spaceNeeded = unusedNeeded - unusedSpace
+
+        return root.findDirectories { it >= spaceNeeded }.minOf { it.calculateSize() }
     }
 
     val testInput = readInput("Day07_test")
     check(part1(testInput) == 95437)
+    check(part2(testInput) == 24933642)
 
     val input = readInput("Day07")
     println(part1(input))
+    println(part2(input))
 }
