@@ -44,7 +44,7 @@ fun Position.moveTowards(towards: Position): Position {
         } else if (abs(differenceY) > abs(differenceX)) {
             differenceX to differenceY.towardsZero()
         } else {
-            error("illegal move")
+            differenceX.towardsZero() to differenceY.towardsZero()
         }
     } else if (isSameX) {
         0 to differenceY.towardsZero()
@@ -86,9 +86,28 @@ fun main() {
         return visited.size
     }
 
+    fun part2(input: List<String>): Int {
+        val rope = buildList(10) { repeat(10) { add(Position(0, 0)) } }.toMutableList()
+        val visited = mutableSetOf(Position(0, 0))
+        input.map { it.split(" ") }.map { it[0][0].toDirection() to it[1].toInt() }.forEach { (dir, by) ->
+            repeat(by) {
+                rope[0] = rope[0].move(dir, 1)
+                for (i in 1 until rope.size) {
+                    rope[i] = rope[i].moveTowards(rope[i - 1])
+                }
+                visited.add(rope.last())
+            }
+        }
+        return visited.size
+    }
+
     val testInput = readInput("Day09_test")
     check(part1(testInput) == 13)
+    check(part2(testInput) == 1)
+    val testInput2 = readInput("Day09_test2")
+    check(part2(testInput2) == 36)
 
     val input = readInput("Day09")
     println(part1(input))
+    println(part2(input))
 }
